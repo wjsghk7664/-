@@ -12,6 +12,10 @@ class Solution {
                     break
                 }
             }
+            //배열은 참조타입이므로 ==나 !=를 쓰면 참조가 비교됨
+            if(!current.contentEquals(arrayOf(-1,-1))){
+                break
+            }
         }
         
         
