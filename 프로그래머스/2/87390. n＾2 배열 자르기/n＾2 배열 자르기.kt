@@ -4,10 +4,10 @@ class Solution {
         
         
         for(i in left..right){
-            if(i/n.toLong()>=i%n.toLong()){
-                answer+=(i/n.toLong() + 1L).toInt()
+            answer+=if(i/n.toLong()>=i%n.toLong()){
+                (i/n.toLong() + 1L).toInt()
             }else{
-                answer+=(i%n.toLong() + 1L).toInt()
+                (i%n.toLong() + 1L).toInt()
             }
         }
         
