@@ -1,10 +1,10 @@
 # [level 4] 짝수 행 세기 - 68647 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/68647) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/68647?language=javascript#) 
 
 ### 성능 요약
 
-메모리: 42 MB, 시간: 18.81 ms
+메모리: 42 MB, 시간: 30.74 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2024년 06월 26일 14:59:14
+2024년 06월 26일 16:20:19
 
 ### 문제 설명
 
