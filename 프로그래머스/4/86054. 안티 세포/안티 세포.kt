@@ -1,35 +1,52 @@
-
 class Solution {
-    private val mod = 1_000_000_007
-
+    val mod=(1e9 + 7).toLong()
+    lateinit var hier:Array<HashMap<Long,Int>>
+    lateinit var case:LongArray
     fun solution(a: IntArray, s: IntArray): IntArray {
-        val answer = IntArray(s.size)
-        var start: Int
-        var end = 0
-        for (t in s.indices) {
-            val n = s[t]
-            start = end
-            end = start + n
-            val sum = LongArray(n + 1)
-            sum[0] = 1
-            val levels = MutableList<MutableMap<Long, Int>>(n + 1) { mutableMapOf() }
-            levels[0][-1L] = -1
-            for (i in 1..n) {
-                sum[i] = connect(a[start + i - 1].toLong(), i, i - 1, sum, levels)
+        var answer: IntArray = IntArray(s.size)
+        var l=0
+        var r=0
+        for(t in s.indices){
+            val i=s[t]
+            r=l+i-1
+            //index는 우측 idx, 키는 합친 세포크기, 값은 좌측 idx
+            hier=Array(i){hashMapOf<Long,Int>()}
+            case=LongArray(i+1){0L}
+            case[0]=1
+            
+
+            for(j in 0..i-1){
+                case[j+1]=merge(a[j+l].toLong(),j,j)
             }
-            answer[t] = (sum[n] % mod).toInt()
+            answer[t]=(case[i]%mod).toInt()
+            l=r+1
         }
         return answer
     }
+    fun merge(initkey:Long,idx:Int,lidx:Int):Long{//idx는 계층 lidx는 좌측 인덱스
+        var total=case[lidx]
+        val curhier=hier[idx]
+        curhier.getOrPut(initkey){lidx}
 
-    private fun connect(num: Long, here: Int, par: Int, sum: LongArray, levels: List<MutableMap<Long, Int>>): Long {
-        val level = levels[here]
-        level.getOrPut(num) { par }
-        var ret = sum[par]
-        levels[par][num]?.let {
-            ret += connect(num * 2, here, it, sum, levels)
-            ret %= mod
+        if(lidx>0){
+            hier[lidx-1][initkey]?.let{
+                total+=merge(2*initkey,idx,it as Int)
+                total%=mod
+            }
         }
-        return ret
+        
+
+        return total
     }
 }
+
+
+
+
+
+
+
+
+
+
+

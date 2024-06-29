@@ -1,10 +1,10 @@
 # [level 4] 안티 세포 - 86054 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/86054?language=kotlin) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/86054) 
 
 ### 성능 요약
 
-메모리: 126 MB, 시간: 87.19 ms
+메모리: 107 MB, 시간: 56.52 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2024년 06월 29일 21:01:19
+2024년 06월 29일 21:30:33
 
 ### 문제 설명
 
