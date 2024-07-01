@@ -1,6 +1,5 @@
 class Solution {
     fun solution(n: Int, start: Int, end: Int, roads: Array<IntArray>, trap: IntArray): Int {
-        var answer: Int = -1
         val road=Array(n+1){ArrayList<IntArray>()} //인덱스는 한쪽 연결점. 배열은 3짜리: 반대연결점, weight, 화살표(1안,0바깥)
         for(i in roads){
             road[i[0]]+=intArrayOf(i[1],i[2],0)
@@ -12,7 +11,7 @@ class Solution {
         val traps=HashSet<Int>()
         for(i in trap) traps.add(i)
         
-        //BFS로 탐색해서 제일먼저 들어오면 중지
+        //BFS로 탐색
         val q=ArrayDeque<Node>()
         val first=Node(start)
         for(i in traps){
