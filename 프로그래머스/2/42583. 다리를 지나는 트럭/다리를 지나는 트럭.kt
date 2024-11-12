@@ -1,29 +1,34 @@
 class Solution {
     fun solution(bridge_length: Int, weight: Int, truck_weights: IntArray): Int {
-        var answer = 0
         
-        val q=ArrayDeque<Int>(bridge_length)
+        val q = ArrayDeque<Int>()
+        
+        var idx = 0
+        
         repeat(bridge_length){
             q.addLast(0)
         }
-        var total=0
-        var idx=0
+        
+        var time = 0
+        var sum = 0
         
         while(true){
-            total-=q.removeFirst()
-            answer++
-            if(total==0&&idx==truck_weights.size) break
-            
-            if(idx<truck_weights.size&&weight-total>=truck_weights[idx]){
-                val tmp=truck_weights[idx++]
-                total+=tmp
-                q.addLast(tmp)
+            time++
+            sum-=q.removeFirst()
+            if(idx<truck_weights.size&&sum + truck_weights[idx] <= weight){
+                val adder = truck_weights[idx++]
+                q.addLast(adder)
+                sum+=adder
             }else{
                 q.addLast(0)
+            }
+            
+            if(sum==0){
+                break
             }
         }
         
         
-        return answer
+        return time
     }
 }
