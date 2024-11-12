@@ -2,58 +2,60 @@ class Solution {
     fun solution(numbers: String): Int {
         var answer = 0
         
-        //nums에 모든 경우의 수 저장(1운 소수, 0은 합성수)
-        val q=ArrayDeque<Node>()
-        val nums=HashMap<Int,Int>()
-        val inits=Node()
-        inits.setinit(numbers)
-        q.addLast(inits)
-        while(q.isNotEmpty()){
-            val cur=q.removeFirst()
-            
-            if(cur.n>1) nums.put(cur.n,1)
-            
-            for(i in cur.bef){
-                q.addLast(cur.choose(i))
-            }
-        }
+        val max = numbers.toCharArray().sortedDescending().joinToString("").toInt()
         
-        val max=nums.keys.maxOrNull() as Int
+        val isPrime = BooleanArray(max+1){true}
+        
+        isPrime[1] = false
+        isPrime[0] = false
+        
+        val gen = genList(numbers)
         
         for(i in 2..Math.sqrt(max.toDouble()).toInt()){
-            for((k,v) in nums){
-                if(k%i==0&&k!=i){
-                    nums.put(k,0)
+            for(j in gen){
+                
+                if(j%i==0&&j!=i) {
+                    isPrime[j] = false
                 }
             }
         }
         
-        
-        for((k,v) in nums){
-            answer+=v
+        for(i in gen){
+            if(isPrime[i]) answer++
         }
         
         return answer
     }
+    
+    fun genList(n:String):IntArray{
+        val nums = n.split("").filter{it!=""}.map{it.toInt()}
+        
+        val list = HashSet<Int>()
+        
+        val q = ArrayDeque<Node>()
+        
+        for(i in nums){
+            val new = Node(i,ArrayList(nums).apply{remove(i)})
+            q.addLast(new)
+            list+=i
+        }
+        
+        while(q.isNotEmpty()){
+            val cur = q.removeFirst()
+            
+            if(cur.numList.isEmpty()) continue
+            
+            
+            for(i in cur.numList){
+                val newnum = cur.num*10 + i
+                val newNode = Node(newnum,ArrayList(cur.numList).apply{remove(i)})
+                list+=newnum
+                q.addLast(newNode)
+            }
+        }
+        
+        return list.toIntArray()
+    }
 }
 
-class Node(){
-    var n=0
-    val bef=ArrayList<Int>()
-    
-    fun setinit(numbers:String){
-        for(i in numbers){
-            bef+=i.toString().toInt()
-        }
-    }
-    fun choose(num:Int):Node{
-        val node=Node()
-        val idx=this.bef.indexOf(num)
-        for((i,v) in this.bef.withIndex()){
-            if(i==idx) continue
-            node.bef+=v
-        }
-        node.n=this.n*10+num
-        return node
-    }
-}
+data class Node(var num:Int, var numList:ArrayList<Int>)
