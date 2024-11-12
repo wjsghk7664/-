@@ -2,30 +2,32 @@ class Solution {
     fun solution(progresses: IntArray, speeds: IntArray): IntArray {
         var answer = intArrayOf()
         
-        var idx=0
-        
-        while(idx<progresses.size){
-            if(idx==progresses.size-1){
-                answer+=1
-                break
-            }
-            var flag=true //앞 작업중 완료안된게 있으면 false
-            var sum=1
-            val mult=(100-progresses[idx])/speeds[idx] + if(progresses[idx]%speeds[idx]!=0) 1 else 0
-            for(i in idx+1..progresses.size-1){
-                progresses[i]+=mult*speeds[i]
-                if(progresses[i]>=100&&flag){
-                    sum++
-                    idx++
-                }
-                else{
-                    flag=false
-                }
-            }
-            idx++
-            answer+=sum
-            
+        var idx = 1
+        val qPro = ArrayDeque<Int>()
+        for(i in progresses){
+            qPro.addLast(i)
         }
+        
+        while(qPro.isNotEmpty()){
+            for(i in idx-1 .. speeds.size-1){
+                qPro[i-idx+1]+=speeds[i]
+            }
+            var num = 0
+            while(true){
+                if(qPro.size==0) break
+                if(qPro[0]>=100){
+                    qPro.removeFirst()
+                    num++
+                    idx++
+                }else{
+                    break
+                }
+            }
+            if(num>0){
+                answer+=num
+            }
+        }
+        
         return answer
     }
 }
