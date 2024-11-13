@@ -1,43 +1,46 @@
 class Solution {
-    lateinit var tree:Array<IntArray>
     fun solution(n: Int, wires: Array<IntArray>): Int {
-        var answer: Int = -1
-        tree=Array(n){IntArray(n)}
+        val link = Array(n+1){BooleanArray(n+1){false}}
+        
         for(i in wires){
-            tree[i[0]-1][i[1]-1]=1
-            tree[i[1]-1][i[0]-1]=1
+            val a = i[0]
+            val b = i[1]
+            
+            link[a][b]=true
+            link[b][a]=true
         }
         
-        var minValue=Int.MAX_VALUE
-        for(i in 0..n-1){
-            val visited=BooleanArray(n){false}
-            visited[i]=true
-            var min=Int.MAX_VALUE
-            for((idx,v) in tree[i].withIndex()){
-                if(v==1){
-                    visited[idx]=true
-                    val tmp=TreeSum(idx,visited)
-                    min=minOf(min, Math.abs(n-2*tmp))
+        var min = Int.MAX_VALUE
+        
+        for(i in wires){
+            val q = ArrayDeque<Int>()
+            val visited = BooleanArray(n+1){false}
+            q.addLast(i[0])
+            visited[i[0]]=true
+            
+            link[i[0]][i[1]]=false
+            link[i[1]][i[0]]=false
+            
+            while(q.isNotEmpty()){
+                val cur = q.removeFirst()
+                
+                for((j,v) in link[cur].withIndex()){
+                    if(v&&!visited[j]){
+                        q.addLast(j)
+                        visited[j]=true
+                    }
                 }
             }
-            minValue=minOf(min,minValue)
+            
+            min=minOf(min, Math.abs(n-2*visited.filter{it}.size))
+            
+            link[i[0]][i[1]]=true
+            link[i[1]][i[0]]=true
             
         }
-        return minValue
+        
+        return min
     }
-    fun TreeSum(n:Int, visited:BooleanArray):Int{
-        var result=1
-        var checkleaf = true
-        for((i,v) in tree[n].withIndex()){
-            if(v==1&&!visited[i]){
-                checkleaf=false
-                visited[i]=true
-                result+=TreeSum(i,visited)
-            }
-        }
-        if(checkleaf){
-           return 1 
-        } 
-        return result
-    }
+    
+    
 }
