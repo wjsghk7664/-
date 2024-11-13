@@ -1,22 +1,27 @@
 class Solution {
     fun solution(k: Int, dungeons: Array<IntArray>): Int {
         var answer: Int = 0
-        var st=k
-        val sets=hashSetOf<IntArray>()
-        for(i in dungeons) sets.add(i)
-        return fac(sets,st,0)
-    }
-    
-    fun fac(sets:HashSet<IntArray>,st:Int,total:Int):Int{
-        val answers=ArrayList<Int>()
-        for(i in sets){
-            if(i[0]<=st){
-                val tmpset=HashSet(sets)
-                tmpset.remove(i)
-                answers+=fac(tmpset,st-i[1],total+1)
+        
+        var maxvisit= 0
+        
+        val q = ArrayDeque<Node>()
+        
+        q.addLast(Node(k,BooleanArray(dungeons.size){false}))
+        
+        while(q.isNotEmpty()){
+            val cur = q.removeFirst()
+            maxvisit = maxOf(maxvisit,cur.visited.filter{it}.size)
+            for((i,v) in dungeons.withIndex()){
+                if(v[0]<=cur.k&&!cur.visited[i]){
+                    val new = Node(cur.k - v[1],cur.visited.copyOf().apply{this[i]=true})
+                    if(new.k>=0) q.addLast(new)
+                }
+                
             }
         }
-        
-        return answers.maxOrNull() ?: total
+        return maxvisit
     }
+    
 }
+
+data class Node(val k:Int, val visited:BooleanArray)
