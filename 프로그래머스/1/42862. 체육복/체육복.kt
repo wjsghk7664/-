@@ -1,34 +1,37 @@
 class Solution {
     fun solution(n: Int, lost: IntArray, reserve: IntArray): Int {
         var answer = 0
-        var list = MutableList<Int>(n+2, {i->1})
-        var lost=lost.sortedArray()
+        
+        val list = IntArray(n+2){1}
+        
         list[0]=0
         list[n+1]=0
         
-        for(i:Int in 0..reserve.size-1){
-            list[reserve[i]]+=1
-        }
-        for(i:Int in 0..lost.size-1){
-            list[lost[i]]-=1
-        }
-        for(i:Int in 0..lost.size-1){
-            var tmp=lost[i]
-            if(list[tmp-1]==2){
-                list[tmp]=1
-                list[tmp-1]=1
-            }
-            else if(list[tmp+1]==2){
-                list[tmp]=1
-                list[tmp+1]=1
-            }
+        for(i in lost){
+            list[i]-=1
         }
         
-        for(i:Int in 1..n){
-            if(list[i]>0){
-                answer++
+        for(i in reserve){
+            list[i]+=1
+        }
+        
+        for(i in 1..n){
+            if(list[i]==0){
+                if(list[i-1]==2){
+                    list[i-1]=1
+                    list[i]=1
+                }else if(list[i+1]==2){
+                    list[i+1]=1
+                    list[i]=1
+                }
             }
         }
+        println(list.contentToString())
+        for(i in list){
+            
+            if(i>0) answer++
+        }
+        
         
         return answer
     }
