@@ -1,55 +1,45 @@
 class Solution {
     fun solution(begin: String, target: String, words: Array<String>): Int {
-        var answer = 0
+        var answer = Int.MAX_VALUE
         
         if(!words.contains(target)) return 0
         
-        val nodes=Array(words.size){Node(words[it],it)}
+        val q = ArrayDeque<Pair<String,Int>>()
+        val visited = BooleanArray(words.size){false}
         
-        val arr=Array(words.size){IntArray(words.size)}
-        
-        for((i,v1) in words.withIndex()){
-            for((j,v2) in words.withIndex()){
-                if(checkWord(v1,v2)){
-                    arr[i][j]=1
-                    arr[j][i]=1
-                }
-            }
-        }
-        
-        
-        val q=ArrayDeque<Pair<Int,Int>>() //변환수, 인덱스
-        
-        for((i,v) in words.withIndex()){
-            if(checkWord(begin,v)) {
-                q.addLast(Pair(1,i))
-            }
-        }
+        q.addLast(Pair(begin,0))
+        if(words.contains(begin)) visited[words.indexOf(begin)]=true
         
         while(q.isNotEmpty()){
-            val (num,cur) = q.removeFirst()
-            println(words[cur]+":"+num.toString())
+            val (cur,idx) = q.removeFirst()
             
-            if(num>words.size) continue
+            if(cur==target){
+                answer=idx
+                break
+            }
             
-            if(target==words[cur]) return num
-            
-            for(i in words.indices){
-                if(arr[cur][i]==1){
-                    q.addLast(Pair(num+1,i))
+            val next = findword(cur,words)
+            for(i in next){
+                if(!visited[words.indexOf(i)]){
+                    visited[words.indexOf(i)]=true
+                    q.addLast(Pair(i,idx+1))
                 }
             }
         }
-        return 0
+        return answer
+        
     }
     
-    fun checkWord(str1:String, str2:String):Boolean{
-        var dif=0
-        for(i in str1.indices){
-            if(str1[i]!=str2[i]) ++dif
+    fun findword(cur:String, words:Array<String>):Array<String>{
+        var result = arrayOf<String>()
+        
+        for(i in words){
+            var diff=0
+            for(j in cur.indices){
+                if(cur[j]!=i[j]) diff++
+            }
+            if(diff==1) result+=i
         }
-        return if(dif==1) true else false
+        return result
     }
 }
-
-data class Node(val word:String, val idx:Int)
