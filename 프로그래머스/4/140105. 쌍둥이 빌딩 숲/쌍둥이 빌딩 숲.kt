@@ -2,25 +2,25 @@ class Solution {
     fun solution(n: Int, count: Int): Int {
         var answer: Int = 0
         
-        val dp=Array(n+1){LongArray(n+1){0}}
+        val dp = Array(n+1){LongArray(n+1)}
         
-        val mod=1000000007L
+        val MOD =1000000007L
         
-        //dp[i][j]: i쌍의 빌딩을 가지고 j개의 빌딩이 보이게 하는 경우의수. i가 커질때 더 작은 빌딩을 넣는 연산
-        //dp[1][1]=1
-        //dp[i][j]가지고 dp[i+1][j],dp[i+1][j+1]만들기
-        //dp[i+1][j]: 맨 앞을 제외하고 아무곳이나 집어넣으면 됨(단 쌍을 붙인 상태로):dp[i][j]*2i
-        //dp[i+1][j+1]: 맨 앞에 두면 됨:dp[i][j]
-        dp[1][1]=1L
+        dp[1][1]=1
+        
+        //dp[i][j]로 만들기: 큰것부터 작아지는 순으로. 
+        //dp[i+1][j]: 가장 작은 건물 추가 이므로 맨 앞만 아니면 됨. 단, 두 건물 사이에 어떤 건물도 못 들어오므로 쌍을 붙여서 다님 
+        //->들어갈 수 있는 자리는 2i개 
+        //dp[i+1][j+1]: 가장 작은 건물 추가이므로 맨 앞이면 됨. 
+        
         for(i in 1..n-1){
             for(j in 1..i){
                 dp[i+1][j]+=dp[i][j]*2*i
+                dp[i+1][j]%=MOD
                 dp[i+1][j+1]+=dp[i][j]
-                dp[i+1][j]%=mod
-                dp[i+1][j+1]%=mod
+                dp[i+1][j+1]%=MOD
             }
         }
-        
-        return (dp[n][count]%mod).toInt()
+        return dp[n][count].toInt()
     }
 }
