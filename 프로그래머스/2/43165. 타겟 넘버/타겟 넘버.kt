@@ -2,22 +2,24 @@ class Solution {
     fun solution(numbers: IntArray, target: Int): Int {
         var answer = 0
         
-        val arr=numbers.mapTo(ArrayList<Int>()){it}
+        val q = ArrayDeque<Pair<Int,Int>>() //인덱스 총합
         
-        return find(arr,target)
-    }
-    
-    fun find(nums:ArrayList<Int>, target:Int):Int{
-        var result=0
-        if(nums.isEmpty()){
-            if(target==0) return 1
-            else return 0
+        q.addLast(Pair(0,numbers[0]))
+        q.addLast(Pair(0,-numbers[0]))
+        
+        while(q.isNotEmpty()){
+            val (curi,curt) = q.removeFirst()
+            
+            
+            if(curi==numbers.size-1){
+                if(curt==target) answer++
+                continue
+            }
+            
+            q.addLast(Pair(curi+1,curt+numbers[curi+1]))
+            q.addLast(Pair(curi+1,curt-numbers[curi+1]))
         }
-        val tmps=nums.clone() as ArrayList<Int>
-        val tmp=tmps[0]
-        tmps.removeAt(0)
-        result+=find(tmps,target+tmp)+find(tmps,target-tmp)
-        return result
-        
+        return answer
     }
 }
+
